@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Funde verwalten</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ ZUGANGS-SCREEN ============ -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-card">
+    <h1>Zugang zur Verwaltung</h1>
+    <p>
+      Zum Speichern wird ein <strong>GitHub Personal Access Token</strong> mit Schreibrecht
+      auf dieses Repository benötigt. Der Token verlässt deinen Browser nie in Richtung Dritter –
+      er wird ausschließlich direkt an <code>api.github.com</code> gesendet, um
+      <code>data/products.json</code> zu aktualisieren.
+    </p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="owner">GitHub-Benutzername / Organisation</label>
+        <input id="owner" type="text" placeholder="z. B. dein-username" required autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="repo">Repository-Name</label>
+        <input id="repo" type="text" placeholder="z. B. meine-funde" required autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="branch">Branch</label>
+        <input id="branch" type="text" placeholder="main" value="main" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="token">Personal Access Token (fine-grained)</label>
+        <input id="token" type="password" placeholder="github_pat_…" required autocomplete="off">
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="remember">
+        Auf diesem Gerät merken (unverschlüsselt im lokalen Speicher – nur an vertrauenswürdigen Geräten aktivieren)
+      </label>
+
+      <button class="btn" type="submit" id="unlockBtn">Entsperren</button>
+      <div id="lockError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ ADMIN-BEREICH ============ -->
+<div class="admin-shell" id="adminShell" style="display:none">
+
+  <div class="admin-header">
+    <h1>Funde verwalten</h1>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span class="status-pill ok" id="connStatus">verbunden</span>
+      <button class="btn secondary small" id="logoutBtn">Abmelden</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2 id="formTitle">Neuen Fund hinzufügen</h2>
+    <p class="hint">Änderungen werden erst mit „Speichern & veröffentlichen“ als Commit ins Repository geschrieben.</p>
+
+    <form id="productForm">
+      <input type="hidden" id="editId">
+      <div class="field">
+        <label for="title">Titel</label>
+        <input id="title" type="text" required>
+      </div>
+      <div class="field">
+        <label for="description">Kurzbeschreibung</label>
+        <textarea id="description" placeholder="Was macht den Fund gut?"></textarea>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="price">Preis</label>
+          <input id="price" type="text" placeholder="9,99 €">
+        </div>
+        <div class="field">
+          <label for="category">Kategorie</label>
+          <input id="category" type="text" placeholder="z. B. Haushalt">
+        </div>
+      </div>
+      <div class="field">
+        <label for="image">Bild-URL</label>
+        <input id="image" type="url" placeholder="https://…">
+      </div>
+      <div class="field">
+        <label for="link">Produkt-/Affiliate-Link</label>
+        <input id="link" type="url" required placeholder="https://www.temu.com/…">
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="featured">
+        Als „Featured“ oben anheften
+      </label>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn" type="submit" id="saveBtn">Speichern &amp; veröffentlichen</button>
+        <button class="btn secondary" type="button" id="cancelEdit" style="display:none">Bearbeitung abbrechen</button>
+      </div>
+      <div id="formNotice"></div>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Vorhandene Funde (<span id="countBadge">0</span>)</h2>
+    <div class="admin-list" id="adminList"></div>
+  </div>
+
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
